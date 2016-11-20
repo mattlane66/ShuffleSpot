@@ -1,0 +1,64 @@
+.hover-div {
+  width: 200px;
+  height:200px;
+  background-color:red;
+}
+
+.hover-div:hover {
+  background-color:blue;
+}
+
+.nested-container {
+  border: #000 4px solid;
+  width: 400px;
+}
+
+.nested-container div {
+  width:100px;
+  height:100px;
+  border:#000 1px solid;
+  background-color:orange;
+}
+
+.nested-container div:first-child {
+  background-color:purple;
+}
+
+.nested-container div:last-child {
+  background-color:green;
+}
+
+.nested-container div:nth-child(odd) {
+  background-color:gray;
+}
+
+
+
+.grocery-list li {
+  color:black;
+}
+
+.grocery-list > li > ul > li {
+  color:red;
+}
+
+/*Atttribute selector*/
+input[name="address"]{
+  font-size:20px;
+  padding:10px;
+}
+
+a[href="http://google.com"] {
+  color:green;
+}
+
+a[href="http://yahoo.com"] {
+  color:purple;
+}
+
+
+
+
+.type-container p:first-of-type {
+  font-size:20px;
+}
