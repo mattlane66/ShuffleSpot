@@ -6,8 +6,12 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
+<meta name="viewport" content="width=device-width" />
+
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
 	<link rel="stylesheet" href="style.css" />
 
@@ -19,7 +23,6 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 
-	<script src="https://rawgit.com/arsood/handlejs/master/handle.js"></script>
 
 	<!-- Underscore JS for utility functionality -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
@@ -28,9 +31,63 @@
 </head>
 <body>
 
-	<a href="https://accounts.spotify.com/authorize?client_id=89120c42b9964a59b878859177c8ef1e&response_type=token&redirect_uri=http://localhost:3000&scope=user-follow-read" class="btn btn-primary">
-		Login With Spotify
-	</a>
+	<div id="login-screen">
+
+
+
+		<h1>ShuffleSpot</h1>
+
+		<p>
+			ShuffleSpot is a PROOF OF CONCEPT that takes artists you follow on Spotify and groups them by genre.
+		</p>
+
+	</p>
+	Once you select a genre, your artists will randomly shuffle in that genre and play your artist's top tracks.
+</p>
+
+<a href="https://accounts.spotify.com/authorize?client_id=89120c42b9964a59b878859177c8ef1e&response_type=token&redirect_uri=http://localhost:3000&scope=user-follow-read" class="btn btn-primary">
+	Login With Spotify
+</a>
+
+</div>
+
+
+<div id="genre-container"></div>
+
+<script id="genre-template" type="text/x-handlebars-template">
+	<div data-genre="{{genre}}" class="square">
+		<div class="content">
+			{{genre}}
+		</div>
+
+	</div>
+</script>
+
+
+
+<div id="player-container">
+	<script id="player-template" type="text/x-handlebars-template">
+		<div class="relative-container">
+			<i class="fa fa-remove fa-2x player-close"></i>
+			<div class="container">
+				<div class="col-sm-2">
+					<img src="{{artistImage}}" class="img-responsive" />
+				</div>
+				<div class="col-sm-10">
+					<h4>{{artistName}}</h4>
+					<p>
+						{{trackTitle}}
+					</p>
+					<p>
+						<audio id="audio-player" controls>
+							<source src="{{songSource}}" type="audio/mpeg">
+							</audio>
+						</p>
+					</div>
+				</div>
+			</div>
+		</script>
+	</div>
 
 </body>
 </html>

@@ -1,11 +1,23 @@
 $(document).ready(function() {
+  //Set up Handlebars templates
+  var genreTemplateSource = $("#genre-template").html();
+  var genreTemplate = Handlebars.compile(genreTemplateSource);
+
+  var playerTemplateSource = $("#player-template").html();
+  var playerTemplate = Handlebars.compile(playerTemplateSource);
 
   var tokenMatches = window.location.hash.match(/access_token=(.*)&token_type=*/);
 
+  //Set up global variable to hold genre, artist, and track information
+  var fullData;
+
   if (tokenMatches) {
+    //Hide login screen if we're logged in
+    $("#login-screen").hide();
+
     var token = tokenMatches[1];
 
-    var genres = ["jazz", "fusion", "classical", "baroque", "opera", "blues", "bluegrass", "folk", "rock", "metal", "hip hop", "r&b", "world", "electronic", "pop", "funk", "comedy", "spoken-word", "soul"];
+    var genres = ["jazz", "fusion", "classical", "baroque", "opera", "blues", "bluegrass", "indie", "asian", "avant garde", "singer songwriter", "alternative", "caribbean", "folk", "indian", "tribal", "african", "rock", "punk", "dance", "latin", "progressive", "metal", "hip hop", "soul", "world", "reggae", "brazilian", "country", "electronic", "pop", "funk", "comedy", "spoken word"];
 
     $.ajax({
       type: "GET",
@@ -54,17 +66,70 @@ $(document).ready(function() {
         });
 
         //Group the artists based on genre
-        var fullData = _.groupBy(allArtists, function(artist) {
+        fullData = _.groupBy(allArtists, function(artist) {
           return artist.genre;
         });
 
-        //Full data set with artists, tracks, genres
-        console.log(fullData);
+        console.log(fullData, "FULL DATA");
+
+        //Loop through data from Spotify and display genres on the UI using Handlebars
+        for (var genre in fullData) {
+          $("#genre-container").append(genreTemplate({
+            genre: genre
+          }));
+        }
       },
       error: function() {
         alert("Error getting following artists");
       }
     });
+
   }
 
+  //Close player on click of the X
+  $(document).on("click", ".player-close", function() {
+    var $playerContainer = $("#player-container");
+
+    $playerContainer.animate({
+      "bottom": "-100%"
+    }, function() {
+      $playerContainer.hide();
+    });
+  });
+
+  //Play music for genre
+  $(document).on("click", ".square", function() {
+    var selectedGenre = $(this).attr("data-genre");
+
+    playMusic(selectedGenre);
+  });
+
+  //Play music function that recurses upon completion of track
+  function playMusic(selectedGenre) {
+    var genreArtist = _.sample(fullData[selectedGenre], 1)[0];
+    var randomTrack = _.sample(genreArtist.tracks, 1)[0];
+
+    var artistImage = genreArtist.artist.images[0].url;
+
+    if (!artistImage) {
+      artistImage = "http://placehold.it/150x150";
+    }
+
+    $("#player-container").html(playerTemplate({
+      artistImage: artistImage,
+      artistName: genreArtist.artist.name,
+      trackTitle: randomTrack.name,
+      songSource: randomTrack.preview_url
+    }));
+
+    $("#player-container").show().animate({
+      "bottom": "0"
+    });
+
+    $("#audio-player")[0].play();
+
+    $("#audio-player").on("ended", function() {
+      playMusic(selectedGenre);
+    });
+  }
 });
