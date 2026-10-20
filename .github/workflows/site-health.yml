@@ -17,4 +17,4 @@ jobs:
         with:
           node-version: '22'
       - run: node --test auth.test.mjs
-      - run: node --check app.js
+      - run: node --check app.mjs
